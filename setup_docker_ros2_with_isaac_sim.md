@@ -1,5 +1,3 @@
-# Setting Up Docker ROS 2 with Local Isaac Sim
-
 This tutorial will guide you through the steps to set up Docker ROS 2 to work with local Isaac Sim.
 
 ## Prerequisites
@@ -7,13 +5,15 @@ This tutorial will guide you through the steps to set up Docker ROS 2 to work wi
 - **Docker Ros2**: Ensure Docker is installed on your system. You can download and install Docker from Docker's official website. For information on how to set up Docker for ROS, you can also refer to [this blog post](https://blog.csdn.net/zysss_/article/details/134125740?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPaidSort-1-134125740-blog-142616408.235%5Ev43%5Epc_blog_bottom_relevance_base4&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPaidSort-1-134125740-blog-142616408.235%5Ev43%5Epc_blog_bottom_relevance_base4&utm_relevant_index=1).
 - **Isaac Sim**: refer to https://docs.omniverse.nvidia.com/isaacsim/latest/installation/install_ros.html#isaac-sim-app-enable-ros
 
-## Step 1: Pull the ROS 2 Docker Image
+## Step 1: Setup docker environment 
 
-First, pull the ROS 2 Docker image. For this tutorial, we'll use the `osrf/ros:humble-desktop-full` image.
+Ideally, you should use a [Dockerfile] to manage the environment. A Dockerfile automates the setup of consistent, reproducible environments, reducing errors from manual configuration. It ensures applications run identically across development, testing, and production. Additionally, it allows version control of configurations, enabling better infrastructure management.
 
+Simply run the following command in the directory containing the Dockerfile:
 ```bash
-docker pull osrf/ros:humble-desktop-full
+docker build -t my-python-app .
 ```
+If you are at the very beginning without a Dockerfilepull,you start with `FROM osrf/ros:humble-desktop-full` to build one.
 
 ## Step 2: Create and Run the Docker Container
 
@@ -44,12 +44,13 @@ Ensure that your ROS 2 environment is properly configured to communicate with Is
 # Must be identical to Isaac Sim ROS_DOMAIN_ID, set RMW_IMPLEMENTATION for Isaac Sim ros2 bridge
 export ROS_DOMAIN_ID=0
 source /opt/ros/humble/setup.bash
-export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+export FASTRTPS_DEFAULT_PROFILES_FILE=/home/robot_repo/humble_ws/fastdds.xml 
+
 ```
 
 ## Step 4: Launch Isaac Sim with ROS 2 Support
 When launching Isaac Sim from the NVIDIA Omniverse Launcher, set `export RMW_IMPLEMENTATION=rmw_fastrtps_cpp` under "Extra Args" to ensure it uses the correct ROS 2 configuration.
-
+![image](https://github.com/MohismLab/how_to_use_isaac_sim/blob/main/images/Screenshot%20from%202024-12-03%2016-53-35.png)
 
 ## Step 5: Verify the Setup
 To verify that everything is set up correctly, you can run a simple ROS 2 node and check if it communicates with Isaac Sim.
