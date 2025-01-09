@@ -1,4 +1,8 @@
-This tutorial will guide you through the steps to set up Docker ROS 2 to work with local Isaac Sim.
+author: Shiyuan Yang  
+This tutorial will guide you through the steps to set up Docker ROS 2 to work with local Isaac Sim.  
+It only tested on docker terminal version, using docker desktop may need additional configurations
+
+For more information: https://github.com/YangSY0628/how_to_use_isaac_sim
 
 ## Prerequisites
 
@@ -7,7 +11,7 @@ This tutorial will guide you through the steps to set up Docker ROS 2 to work wi
 
 ## Step 1: Setup docker environment 
 
-Ideally, you should use a [Dockerfile] to manage the environment. A Dockerfile automates the setup of consistent, reproducible environments, reducing errors from manual configuration. It ensures applications run identically across development, testing, and production. Additionally, it allows version control of configurations, enabling better infrastructure management.
+Ideally, you should use a [Dockerfile](https://github.com/MohismLab/MohismLab_HomePage/tree/main/isaac_sim) to manage the environment. A Dockerfile automates the setup of consistent, reproducible environments, reducing errors from manual configuration. It ensures applications run identically across development, testing, and production. Additionally, it allows version control of configurations, enabling better infrastructure management.
 
 Simply run the following command in the directory containing the Dockerfile:
 ```bash
@@ -50,9 +54,14 @@ export FASTRTPS_DEFAULT_PROFILES_FILE=/home/robot_repo/humble_ws/fastdds.xml
 
 ## Step 4: Launch Isaac Sim with ROS 2 Support
 When launching Isaac Sim from the NVIDIA Omniverse Launcher, set `export RMW_IMPLEMENTATION=rmw_fastrtps_cpp` under "Extra Args" to ensure it uses the correct ROS 2 configuration.
-![image](https://github.com/MohismLab/how_to_use_isaac_sim/blob/main/images/Screenshot%20from%202024-12-03%2016-53-35.png)
+![image](https://github.com/MohismLab/MohismLab_HomePage/blob/main/isaac_sim/images/Screenshot%20from%202024-12-03%2016-53-35.png)
 
 ## Step 5: Verify the Setup
 To verify that everything is set up correctly, you can run a simple ROS 2 node and check if it communicates with Isaac Sim.
 `ros2 run demo_nodes_cpp talker`
 In Isaac Sim, you should be able to see the ROS 2 topics being published and subscribed to.
+
+# docker network issue in China Mainland
+If you encounter connection issues while building Docker images in China mainland, refer to the [Docker proxy settings](https://docs.docker.com/engine/daemon/proxy/#daemon-configuration).
+You may also use `docker pull` before `docker build`, since directly running `docker pull` may report connection faliure.  
+You may also need to docker login to pull image 
