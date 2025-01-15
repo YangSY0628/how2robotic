@@ -1,15 +1,11 @@
-```markdown
+**Author:** Shiyuan Yang  
+**Email:** shiyuanyang0628@hotmail.com  
+
+This tutorial is about how to train a quadruped RL policy by Isaac Lab, and how to export .pt file which can be used in Isaac Sim.
+
 ## Basic Usage
 
-To preview, press `Ctrl + Shift + V`.
-
-### Useful Links
-- [Closing the Sim-to-Real Gap: Training Spot Quadruped Locomotion with NVIDIA Isaac Lab](https://developer.nvidia.com/blog/closing-the-sim-to-real-gap-training-spot-quadruped-locomotion-with-nvidia-isaac-lab/)
-- [Isaac Lab Tutorials](https://docs.omniverse.nvidia.com/isaacsim/latest/isaac_lab_tutorials/index.html)
-- [Policy Deployment Tutorial](https://docs.omniverse.nvidia.com/isaacsim/latest/isaac_lab_tutorials/tutorial_policy_deployment.html)
-- [CSDN Blog](https://blog.csdn.net/u010321827/article/details/140929275?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-4-140929275-blog-126393698.235^v43^pc_blog_bottom_relevance_base9&spm=1001.2101.3001.4242.3&utm_relevant_index=7)
-
-### Steps to Use Isaac Lab
+### Steps to Use Isaac Lab to train quadruped
 
 1. Activate the Isaac Lab environment:
     ```sh
@@ -40,7 +36,7 @@ To preview, press `Ctrl + Shift + V`.
     **Note:** The checkpoint file does not contain `constant.pkl`, which is used to temporarily store training status. For more details, see [this blog](https://zhuanlan.zhihu.com/p/594168482).
 
 6. After playing and exporting, navigate to:
-    ```
+    ```sh
     /home/ubuntu-user/robot_repo/shiyuan_ws/IsaacLab/logs/rsl_rl/unitree_go2_flat/2024-12-30_13-55-59/exported
     ```
     There should be `.pt` and `.onnx` files as the final model files.
@@ -59,4 +55,10 @@ omegaconf.errors.UnsupportedValueType: Value 'Tensor' is not a supported primiti
 ```
 
 Re-installing Isaac Lab v1.3.0 (GitHub - isaac-sim/IsaacLab at v1.3.0) instead of the master branch resolved the issue, indicating a potential issue between versions 1.3.0 and the master branch.
-```
+
+### References
+- [Closing the Sim-to-Real Gap: Training Spot Quadruped Locomotion with NVIDIA Isaac Lab](https://developer.nvidia.com/blog/closing-the-sim-to-real-gap-training-spot-quadruped-locomotion-with-nvidia-isaac-lab/)
+- [Isaac Lab Tutorials](https://docs.omniverse.nvidia.com/isaacsim/latest/isaac_lab_tutorials/index.html)
+- [Policy Deployment Tutorial](https://docs.omniverse.nvidia.com/isaacsim/latest/isaac_lab_tutorials/tutorial_policy_deployment.html)
+- [CSDN Blog](https://blog.csdn.net/u010321827/article/details/140929275?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-4-140929275-blog-126393698.235^v43^pc_blog_bottom_relevance_base9&spm=1001.2101.3001.4242.3&utm_relevant_index=7)
+

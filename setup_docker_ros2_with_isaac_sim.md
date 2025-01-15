@@ -1,4 +1,6 @@
-author: Shiyuan Yang  
+**Author:** Shiyuan Yang  
+**Email:** shiyuanyang0628@hotmail.com
+ 
 This tutorial will guide you through the steps to set up Docker ROS 2 to work with local Isaac Sim.  
 It only tested on docker terminal version, using docker desktop may need additional configurations
 
@@ -30,7 +32,7 @@ docker run -it \
     --env="DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-    --volume="/home/ubuntu-user/robot_repo:/home/robot_repo" \
+    --volume="/home:/home" \
     osrf/ros:humble-desktop-full \
     rqt
 ```
@@ -42,14 +44,15 @@ docker start ros2-humble-container
 docker exec -it ros2-humble-container /bin/bash
 ```
 ## Step 3: Configure ROS 2 with Isaac Sim
-Ensure that your ROS 2 environment is properly configured to communicate with Isaac Sim. You may need to set environment variables and source the ROS 2 setup script.
+In the docker container you just created, ensure that your ROS 2 is properly configured to communicate with Isaac Sim. You may need to set environment variables and source the ROS 2 setup script. You can put these commands into .bashrc.
 
 ```bash
 # Must be identical to Isaac Sim ROS_DOMAIN_ID, set RMW_IMPLEMENTATION for Isaac Sim ros2 bridge
 export ROS_DOMAIN_ID=0
 source /opt/ros/humble/setup.bash
-export FASTRTPS_DEFAULT_PROFILES_FILE=/home/robot_repo/humble_ws/fastdds.xml 
-
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+# or use
+# export FASTRTPS_DEFAULT_PROFILES_FILE=/home/robot_repo/humble_ws/fastdds.xml 
 ```
 
 ## Step 4: Launch Isaac Sim with ROS 2 Support
@@ -59,9 +62,10 @@ When launching Isaac Sim from the NVIDIA Omniverse Launcher, set `export RMW_IMP
 ## Step 5: Verify the Setup
 To verify that everything is set up correctly, you can run a simple ROS 2 node and check if it communicates with Isaac Sim.
 `ros2 run demo_nodes_cpp talker`
-In Isaac Sim, you should be able to see the ROS 2 topics being published and subscribed to.
+In Isaac Sim, click play and you should be able to see the ROS 2 topics being published and subscribed to.
+[image]()
 
 # docker network issue in China Mainland
-If you encounter connection issues while building Docker images in China mainland, refer to the [Docker proxy settings](https://docs.docker.com/engine/daemon/proxy/#daemon-configuration).
-You may also use `docker pull` before `docker build`, since directly running `docker pull` may report connection faliure.  
+If you encounter connection issues while building Docker images in China mainland and you are already using a proxy, refer to the [Docker proxy settings](https://docs.docker.com/engine/daemon/proxy/#daemon-configuration) to set docker go through the proxy.
+You are very likely to use `docker pull` to pull the image before `docker build`, since directly running `docker pull` may report connection faliure.  
 You may also need to docker login to pull image 

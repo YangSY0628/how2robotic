@@ -17,19 +17,19 @@ RUN apt-get update && apt-get install -y \
 
 
 # 设置工作目录
-WORKDIR /home/robot_repo
+# you can change the directory name to your own
+WORKDIR /home/ysy/shiyuan_ws
 
 RUN git clone https://github.com/isaac-sim/IsaacSim-ros_workspaces.git && \
-    cp -r IsaacSim-ros_workspaces/humble_ws /home/robot_repo/humble_ws
-
+    cp -r IsaacSim-ros_workspaces/humble_ws ./humble_ws
 
 # 编译 ROS 包
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
-    cd /home/robot_repo/humble_ws && \
+    cd ./humble_ws && \
     colcon build"
 
 # 设置环境变量
 ENV ROS_DOMAIN_ID=0 \
-    FASTRTPS_DEFAULT_PROFILES_FILE=/home/robot_repo/humble_ws/fastdds.xml
+    FASTRTPS_DEFAULT_PROFILES_FILE=./humble_ws/fastdds.xml
 
 
