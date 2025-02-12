@@ -17,9 +17,9 @@ Ideally, you should use a [Dockerfile](https://github.com/MohismLab/MohismLab_Ho
 
 Simply run the following command in the directory containing the Dockerfile:
 ```bash
-docker build -t my-python-app .
+docker build -t `my-python-app` .
 ```
-If you are at the very beginning without a Dockerfilepull,you start with `FROM osrf/ros:humble-desktop-full` to build one.
+If you are at the very beginning without a Dockerfile,you can start with `FROM osrf/ros:humble-desktop-full` to build one.
 
 ## Step 2: Create and Run the Docker Container
 
@@ -33,7 +33,7 @@ docker run -it \
     --env="QT_X11_NO_MITSHM=1" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --volume="/home:/home" \
-    osrf/ros:humble-desktop-full \
+    `my-python-app` \
     rqt
 ```
 after created container, next time run below to start it:
