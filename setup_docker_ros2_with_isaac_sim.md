@@ -34,8 +34,9 @@ docker run -it \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --volume="/home:/home" \
     `my-python-app` \
-    rqt
-```
+    rqt 
+```  
+For the students in E11 GPU-lab, rqt may need to be disabled.
 after created container, next time run below to start it:
 ```bash
 # Allow local connections to the X server
