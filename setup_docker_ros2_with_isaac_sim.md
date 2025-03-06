@@ -27,25 +27,26 @@ Run the Docker container with the necessary environment variables and volume mou
 
 ```bash
 docker run -it \
-    --name ros2-humble-container \
+    --name <YOUR_CONTAINER_NAME> \
     --network host \
     --env="DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-    --volume="/home:/home" \
-    `my-python-app` \
-    rqt 
-```  
+    --volume="<YOUR_PATH>/humble_ws:/root/humble_ws" \
+    <YOUR_IMAGENAME> \
+    rqt
+```
 For the students in E11 GPU-lab, rqt may need to be disabled.
-after created container, next time run below to start it:
+After created container, next time run below to start it:
 ```bash
-# Allow local connections to the X server
-docker inspect --format='{{ .Config.Hostname }}' ros2-humble-container
-docker start ros2-humble-container
-docker exec -it ros2-humble-container /bin/bash
+docker start <YOUR_CONTAINER_NAME> && docker exec -it <YOUR_CONTAINER_NAME> /bin/bash
+```
+If `rviz` is needed, run the following command to allow local connections to the X server from the specified Docker container:
+```bash
+xhost +local:$(docker inspect --format='{{ .Config.Hostname }}' <YOUR_CONTAINER_NAME>) && docker start <YOUR_CONTAINER_NAME> && docker exec -it <YOUR_CONTAINER_NAME> /bin/bash
 ```
 ## Step 3: Configure ROS 2 with Isaac Sim
-In the docker container you just created, ensure that your ROS 2 is properly configured to communicate with Isaac Sim. You may need to set environment variables and source the ROS 2 setup script. You can put these commands into .bashrc.
+In the docker container you just created, ensure that your ROS 2 is properly configured to communicate with Isaac Sim. You may need to set environment variables and source the ROS 2 setup script. You can put these commands into .bashrc. It has also been added into DOCKERFILE.
 
 ```bash
 # Must be identical to Isaac Sim ROS_DOMAIN_ID, set RMW_IMPLEMENTATION for Isaac Sim ros2 bridge
