@@ -74,5 +74,5 @@ In Isaac Sim, click play and you should be able to see the ROS 2 topics being pu
   
 # docker network issue in China Mainland
 If you encounter connection issues while building Docker images in China mainland and you are already using a proxy, refer to the [Docker proxy settings](https://docs.docker.com/engine/daemon/proxy/#daemon-configuration) to set docker go through the proxy.
-You are very likely to use `docker pull` to pull the image before `docker build`, since directly running `docker pull` may report connection faliure.  
+You are very likely to use `docker pull` to pull the image before `docker build`, since directly running `docker build` may report connection faliure.  
 You may also need to docker login to pull image 
