@@ -72,7 +72,31 @@ To verify that everything is set up correctly, you can run a simple ROS 2 node a
 In Isaac Sim, click play and you should be able to see the ROS 2 topics being published and subscribed to. 
 ![image](images/tutorial_ros2_publisher.png)  
   
-# docker network issue in China Mainland
-If you encounter connection issues while building Docker images in China mainland and you are already using a proxy, refer to the [Docker proxy settings](https://docs.docker.com/engine/daemon/proxy/#daemon-configuration) to set docker go through the proxy.
-You are very likely to use `docker pull` to pull the image before `docker build`, since directly running `docker build` may report connection faliure.  
-You may also need to docker login to pull image 
+## Docker Network Issue in China Mainland
+
+If you encounter connection issues while building Docker images in China Mainland and you are already using a proxy, refer to the [Docker proxy settings](https://docs.docker.com/engine/daemon/proxy/#daemon-configuration) to configure Docker to use the proxy.
+
+### Daemon Configuration
+
+You may configure proxy behavior for the daemon in the `daemon.json` file or use CLI flags such as `--http-proxy` or `--https-proxy` for the `dockerd` command. Configuration using `daemon.json` is recommended.
+
+```json
+{
+    "proxies": {
+        "http-proxy": "http://proxy.example.com:3128",
+        "https-proxy": "https://proxy.example.com:3129",
+        "no-proxy": "*.test.example.com,.example.org,127.0.0.0/8"
+    }
+}
+```
+
+After changing the configuration file, restart the daemon for the proxy configuration to take effect:
+
+```bash
+sudo systemctl restart docker
+```
+
+### Additional Tips
+
+- You are very likely to use `docker pull` to pull the image before running `docker build`, as directly running `docker build` may report a connection failure.
+- You may also need to log in to Docker using `docker login` to pull the image.
