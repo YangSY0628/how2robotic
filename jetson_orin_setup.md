@@ -1,6 +1,6 @@
 # Flash System
-
-## Install SSD
+Check out [SDK Manager](https://docs.nvidia.com/sdk-manager/download-run-sdkm/index.html#login)
+# Install SSD
 
 1. 查看设备：
     ```bash
