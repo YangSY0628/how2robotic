@@ -1,5 +1,9 @@
 # Flash System
-Check out [SDK Manager](https://docs.nvidia.com/sdk-manager/download-run-sdkm/index.html#login)
+
+Check out [SDK Manager](https://docs.nvidia.com/sdk-manager/download-run-sdkm/index.html#login).
+
+---
+
 # Install SSD
 
 1. 查看设备：
@@ -28,7 +32,7 @@ Check out [SDK Manager](https://docs.nvidia.com/sdk-manager/download-run-sdkm/in
 
 5. 为了每次开机自动挂载 SSD，需要修改 `/etc/fstab`：
     ```bash
-    sudo nano /etc/fstab
+    sudo vim /etc/fstab
     ```
     添加以下内容：
     ```
@@ -52,7 +56,12 @@ Check out [SDK Manager](https://docs.nvidia.com/sdk-manager/download-run-sdkm/in
     sudo chown -R mohism0:mohism0 /home/mohism0
     ```
 
-8. 重启系统：
+8. 查看：
+    ```bash
+    df -h /home
+    ```
+
+9. 重启系统：
     ```bash
     sudo reboot
     ```
@@ -62,6 +71,7 @@ Check out [SDK Manager](https://docs.nvidia.com/sdk-manager/download-run-sdkm/in
 # Connect to Wi-Fi Using Terminal
 
 ## 查看无线网络接口
+
 使用以下命令查看无线网络接口：
 ```bash
 iwconfig
@@ -77,6 +87,7 @@ iwconfig
     此命令会列出附近的可用 Wi-Fi 网络，显示网络的 SSID（网络名称）以及其他信息。
 
 2. 连接到 Wi-Fi 网络：
+
     假设你已经看到了一个可用的网络（例如 SSID 为 `MyWiFiNetwork`），可以使用以下命令连接：
     ```bash
     nmcli dev wifi connect "MyWiFiNetwork" password "your_wifi_password"
@@ -87,10 +98,11 @@ iwconfig
 # Change the Default Docker Directory to `/home`
 
 1. 修改 Docker 配置文件：
+
     在 `/etc/docker/daemon.json` 中添加以下内容：
     ```json
     {
-         "data-root": "/new/path/to/docker"
+        "data-root": "/new/path/to/docker"
     }
     ```
 
@@ -104,11 +116,12 @@ iwconfig
     docker info | grep "Docker Root Dir"
     ```
 
-4. add user to docker group:
-```bash
-sudo usermod -aG docker $USER
-newgrp docker
-```
+4. 将用户添加到 Docker 组：
+    ```bash
+    sudo usermod -aG docker $USER
+    newgrp docker
+    groups $USER
+    ```
 
 ---
 
@@ -121,18 +134,50 @@ newgrp docker
     docker pull dustynv/ros:humble-desktop-l4t-r36.4.0
     ```
 
-3. 运行 ROS Docker 容器：
+3. 构建 Docker 镜像：
+
+    使用提供的 [Dockerfile](./Dockerfile) 构建镜像：
     ```bash
-    sudo docker run --runtime nvidia -it -v /home/mohism0/mohism_ws:/root/mohism_ws -w /root/mohism_ws --rm --network=host dustynv/ros:humble-desktop-l4t-r36.4.0
+    docker build -t jetson-ros2:v0 .
     ```
-## Installing Add-on Packages
-[jetson-containers](https://github.com/dusty-nv/jetson-containers/blob/master/packages/ros/README.md)
 
-Since the ROS distributions included in these containers are built from source, you should not install additional ROS packages for them from apt - instead these should be built from source too.  There is a helper script for this [`/ros2_install.sh`](ros2_install.sh) which takes either a list of ROS package names or URL of a git repo, and builds/installs them in a ROS workspace:
+4. 运行 ROS Docker 容器：
+    ```bash
+    docker run \
+        --runtime nvidia \
+        --gpus all \
+        -it \
+        --rm \
+        --privileged \
+        -v /home/mohism0/mohism_ws:/root/mohism_ws \
+        -w /root/mohism_ws \
+        --network=host \
+        jetson-ros2:v0
+        # dustynv/ros:humble-desktop-l4t-r36.4.0
+    ```
 
+    或者：
+    ```bash
+    docker start <YOUR_CONTAINER_NAME> && docker exec -it <YOUR_CONTAINER_NAME> /bin/bash
+    xhost +local:$(docker inspect --format='{{ .Config.Hostname }}' <YOUR_CONTAINER_NAME>) && docker start <YOUR_CONTAINER_NAME> && docker exec -it <YOUR_CONTAINER_NAME> /bin/bash
+    ```
+
+---
+
+# Camera
+
+测试：
+
+在 Docker 构建中添加以下参数：
+- `-v /tmp/.X11-unix:/tmp/.X11-unix`
+- `-e DISPLAY=$DISPLAY`
+
+运行以下命令测试摄像头：
+```bash
+gst-launch-1.0 v4l2src device=/dev/video0 ! nvvidconv ! videoconvert ! video/x-raw ! autovideosink
 ```
-# adds foxglove to ROS_ROOT (under /opt/ros)
-/ros2_install.sh foxglove_bridge
 
-# adds jetson-inference nodes under /ros2_workspace
-ROS_WORKSPACE=/ros2_workspace /ros2_install.sh 
+Run gscam:
+```bash
+ros2 launch gscam gscam.launch.py
+```
