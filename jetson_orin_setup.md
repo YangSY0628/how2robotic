@@ -104,6 +104,12 @@ iwconfig
     docker info | grep "Docker Root Dir"
     ```
 
+4. add user to docker group:
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
 ---
 
 # ROS Docker
@@ -119,3 +125,14 @@ iwconfig
     ```bash
     sudo docker run --runtime nvidia -it -v /home/mohism0/mohism_ws:/root/mohism_ws -w /root/mohism_ws --rm --network=host dustynv/ros:humble-desktop-l4t-r36.4.0
     ```
+## Installing Add-on Packages
+[jetson-containers](https://github.com/dusty-nv/jetson-containers/blob/master/packages/ros/README.md)
+
+Since the ROS distributions included in these containers are built from source, you should not install additional ROS packages for them from apt - instead these should be built from source too.  There is a helper script for this [`/ros2_install.sh`](ros2_install.sh) which takes either a list of ROS package names or URL of a git repo, and builds/installs them in a ROS workspace:
+
+```
+# adds foxglove to ROS_ROOT (under /opt/ros)
+/ros2_install.sh foxglove_bridge
+
+# adds jetson-inference nodes under /ros2_workspace
+ROS_WORKSPACE=/ros2_workspace /ros2_install.sh 
