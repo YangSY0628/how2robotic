@@ -181,3 +181,80 @@ Run gscam:
 ```bash
 ros2 launch gscam gscam.launch.py
 ```
+
+## Calibration
+
+Refer to the [Calibration Checkerboard Collection](https://markhedleyjones.com/projects/calibration-checkerboard-collection) for calibration resources.
+
+---
+
+## Troubleshooting
+
+### Argus Error
+
+If you encounter the following error:
+```
+(Argus) Error FileOperationFailed: Connecting to nvargus-daemon failed: No such file or directory (in src/rpc/socket/client/SocketClientDispatch.cpp, function openSocketConnection(), line 205)
+[gscam_node-1] (Argus) Error FileOperationFailed: Cannot create camera provider (in src/rpc/socket/client/SocketClientDispatch.cpp, function createCameraProvider(), line 107)
+```
+
+Start the `nvargus-daemon` service:
+```bash
+sudo systemctl start nvargus-daemon
+```
+
+### GSCam Performance Issue
+
+If `gscam` is very slow with `nvvidcov`, it might be due to missing CUDA dependencies. Verify and reinstall the necessary dependencies if required.
+
+---
+
+## Isaac-ROS
+
+Refer to the [Isaac-ROS Jetson Platforms Setup Guide](https://nvidia-isaac-ros.github.io/getting_started/hardware_setup/compute/index.html#jetson-platforms) for initial setup.
+
+### OCI Specification Error
+
+If you encounter the following error:
+```
+could not apply required modification to OCI specification: error modifying OCI spec: failed to inject CDI devices: unresolvable CDI devices nvidia.com/gpu=all: unknown
+```
+
+Follow the solution provided in the [Isaac-ROS Jetson VPI Guide](https://nvidia-isaac-ros.github.io/getting_started/hardware_setup/compute/jetson_vpi.html).
+
+### Docker Build Issue
+
+If running `./scripts/run_dev.sh` results in errors, you may need to uncomment some `pip install` commands in `Dockerfile.aarch64`. Reinstall these dependencies as needed in the future.
+
+---
+
+## Image Processing with Isaac-ROS
+
+Refer to the [Isaac-ROS Image Processing Quickstart Guide](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_image_pipeline/isaac_ros_image_proc/index.html#quickstart) for detailed instructions.
+
+### Install Required Packages
+
+To set up the required packages, use the following commands:
+
+1. Install `isaac_ros_image_proc`:
+    ```bash
+    sudo apt-get install -y ros-humble-isaac-ros-image-proc
+    ```
+
+2. Install `isaac_ros_examples` and `isaac_ros_argus_camera`:
+    ```bash
+    sudo apt-get install -y ros-humble-isaac-ros-examples ros-humble-isaac-ros-argus-camera
+    ```
+
+3. Install GStreamer and its dependencies:
+    ```bash
+    sudo apt-get update && sudo apt-get install -y \
+        gstreamer1.0-tools \
+        gstreamer1.0-plugins-base \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly \
+        gstreamer1.0-libav \
+        libgstreamer1.0-dev \
+        libgstreamer-plugins-base1.0-dev
+    ```
